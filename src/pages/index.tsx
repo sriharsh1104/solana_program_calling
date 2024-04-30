@@ -4,7 +4,7 @@ import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import useIsMounted from "./api/utils/useIsMounted";
 import styles from "../styles/Home.module.css";
-import { createAccount, getMessage3 } from "./caculate";
+import { createAccount, crudOperation, getMessage3 } from "./caculate";
 import { useWallet } from "@solana/wallet-adapter-react";
 export default function Home() {
   // const [messageAccount, _] = useState<any>(Keypair.generate()); // Use for generating new account for storage
@@ -18,7 +18,9 @@ export default function Home() {
   );
   const { publicKey } = useWallet();
   const [message, setMessage] = useState<Number>(0);
-  const [inputtedMessage, setInputtedMessage] = useState("");
+  const [selectedOperation, setSelectedOperation] = useState("");
+  const [inputValue1, setInputValue1] = useState("");
+  const [inputValue2, setInputValue2] = useState("");
 
   const wallet: any = useAnchorWallet();
   const mounted = useIsMounted();
@@ -26,10 +28,9 @@ export default function Home() {
   const callGetMessage = async () => {
     const result: any = await getMessage3(wallet, messageAccount);
     if (result) {
-      setMessage(result.result);
-      setInputtedMessage("");
+      setMessage(result?.result);
     }
-    console.log("wewqeqweq", result.result);
+    console.log("wewqeqweq", result?.result);
   };
 
   const callCreateAccount = async () => {
@@ -37,6 +38,21 @@ export default function Home() {
       const result = await createAccount(messageAccount, wallet, publicKey);
     }
   };
+  const callCalculate = async () => {
+    if (wallet) {
+      const result = await crudOperation(
+        messageAccount,
+        wallet,
+        selectedOperation,
+        inputValue1,
+        inputValue2
+      );
+      if (result) {
+        callGetMessage(); // Call getMessage function to update the result
+      }
+    }
+  };
+
   useEffect(() => {
     if (wallet) callGetMessage();
   }, [wallet]);
@@ -46,21 +62,36 @@ export default function Home() {
       <div className={styles.navbar}>{mounted && <WalletMultiButton />}</div>
 
       <div className={styles.main}>
-        <h1 className={styles.navbar}>SPL</h1>
         {wallet && (
           <div className={styles.message_bar}>
+            <select
+              value={selectedOperation}
+              onChange={(e) => setSelectedOperation(e.target.value)}
+            >
+              <option value="">Select Operation</option>
+              <option value="Addition">Addition</option>
+              <option value="Subtraction">Subtraction</option>
+              <option value="Multiplication">Multiplication</option>
+              <option value="Division">Division</option>
+            </select>
             <input
               className={styles.message_input}
-              placeholder="Caculation Result"
-              onChange={(e) => setInputtedMessage(e.target.value)}
-              value={inputtedMessage}
+              placeholder="Input Value 1"
+              onChange={(e) => setInputValue1(e.target.value)}
+              value={inputValue1}
+            />
+            <input
+              className={styles.message_input}
+              placeholder="Input Value 2"
+              onChange={(e) => setInputValue2(e.target.value)}
+              value={inputValue2}
             />
             <button
               className={styles.message_button}
-              disabled={!inputtedMessage}
-              onClick={() => callCreateAccount()}
+              disabled={!selectedOperation || !inputValue1 || !inputValue2}
+              onClick={() => callCalculate()}
             >
-              Balance Check
+              Calculate
             </button>
           </div>
         )}
