@@ -1,5 +1,4 @@
-import idl from "../idl/bridge.json";
-import idl2 from "../idl/new.json";
+import idl from "../idl/calculator.json";
 
 import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
 
@@ -10,13 +9,10 @@ import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
 // confirmed is somewhere balance of both
 export const commitmentLevel = "processed";
 export const endpoint =
-  process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL || clusterApiUrl("devnet");
+  process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL || clusterApiUrl("devnet"); // Set Network on which You Are Working
 export const connection = new Connection(endpoint, commitmentLevel);
 
-/** Constants for our deployed hello world program */
-export const HELLO_WORLD_PROGRAM_ID_FOR_BRIDGE = idl.metadata.address;
-export const HELLO_WORLD_PROGRAM_INTERFACE_FOR_BRIDGE = JSON.parse(
-  JSON.stringify(idl)
-);
-export const TEST_PROGRAM_ID = new PublicKey(idl2.metadata.address);
-export const TEST_PROGRAM_INTERFACE = JSON.parse(JSON.stringify(idl2));
+/** Constants for our deployed calculator  Program */
+
+export const TEST_PROGRAM_ID = new PublicKey(idl.metadata.address);
+export const TEST_PROGRAM_INTERFACE = JSON.parse(JSON.stringify(idl));
