@@ -98,14 +98,14 @@ export async function crudOperation(
 
     // const messageAccountFromPrivateKey =
     //   Keypair.fromSecretKey(privateKeyBuffer);  
-
+console.log('first', wallet)
     const operation = Operations[selectedOperation];
     console.log("operation", operation,wallet.publicKey.toString());
     const txn = await program.methods
       .calculate(operation, inputValue1, inputValue2)
       .accounts({
         account: acc.publicKey,
-        payer: wallet,
+        payer: wallet.publicKey,
       })
       // .signers([messageAccountFromPrivateKey]) //no Need to set signer can use publicKey to pay 
       .rpc();
