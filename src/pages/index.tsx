@@ -16,11 +16,12 @@ export default function Home() {
       86, 226, 136, 80, 86, 128, 160, 62, 30, 138, 34, 167, 84, 48, 95, 101,
     ]) // Array of Private key Address Which Will Store Data
   );
+  console.log('messageAccount', messageAccount.publicKey.toString())
   const { publicKey } = useWallet();
   const [message, setMessage] = useState<Number>(0);
-  const [selectedOperation, setSelectedOperation] = useState("");
-  const [inputValue1, setInputValue1] = useState("");
-  const [inputValue2, setInputValue2] = useState("");
+  const [selectedOperation, setSelectedOperation] = useState<string>("");
+  const [inputValue1, setInputValue1] = useState<string>("");
+  const [inputValue2, setInputValue2] = useState<string>("");
 
   const wallet: any = useAnchorWallet();
   const mounted = useIsMounted();

@@ -21,8 +21,8 @@ export async function getMessage3(
   if (!provider) return;
   /* create the program interface combining the idl, program Id, and provider */
   const program = new Program(
-    TEST_PROGRAM_INTERFACE, // Calculator IDL
-    TEST_PROGRAM_ID, // Calculator Program Id
+    TEST_PROGRAM_INTERFACE, //  IDL Of Calculator
+    TEST_PROGRAM_ID, //  ProgramId Of Calculator
     provider
   ) as Program<CrudWorld>;
   try {
@@ -88,21 +88,26 @@ export async function crudOperation(
       Multiplication: { multiplication: {} },
       Division: { division: {} },
     };
-    const privateKeyString =
-      "56Z6sBdieEvQrgNFZ3QZmGcaq9BRjji9aLhfp9im9KBB79ZJAnVGmZFs9HFQtzfxf8vtvL9qS28xipxJxenwntsq"; //User wallet privatekey  or secretkey which is Used for Payment
-    const privateKeyBuffer = bs58.decode(privateKeyString);
+    // Optional 
+    // If signer is set than have to use private or secret key of the user => Bad practise not possiable just for testing purpose 
+    // If signer is not set we can use user Public address to pay the fee .
 
-    const messageAccountFromPrivateKey =
-      Keypair.fromSecretKey(privateKeyBuffer);
+    // const privateKeyString =
+    //   "56Z6sBdieEvQrgNFZ3QZmGcaq9BRjji9aLhfp9im9KBB79ZJAnVGmZFs9HFQtzfxf8vtvL9qS28xipxJxenwntsq"; //User wallet privatekey  or secretkey which is Used for Payment
+    // const privateKeyBuffer = bs58.decode(privateKeyString);
+
+    // const messageAccountFromPrivateKey =
+    //   Keypair.fromSecretKey(privateKeyBuffer);  
+
     const operation = Operations[selectedOperation];
-    console.log("operation", operation);
+    console.log("operation", operation,wallet.publicKey.toString());
     const txn = await program.methods
       .calculate(operation, inputValue1, inputValue2)
       .accounts({
         account: acc.publicKey,
-        payer: messageAccountFromPrivateKey.publicKey,
+        payer: wallet,
       })
-      .signers([messageAccountFromPrivateKey])
+      // .signers([messageAccountFromPrivateKey]) //no Need to set signer can use publicKey to pay 
       .rpc();
 
     console.log("Transaction", txn);
