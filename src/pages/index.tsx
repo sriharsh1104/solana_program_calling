@@ -1,65 +1,48 @@
 import { useEffect, useState } from "react";
-import { Keypair, PublicKey } from "@solana/web3.js";
+import { Keypair } from "@solana/web3.js";
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import useIsMounted from "./api/utils/useIsMounted";
 import styles from "../styles/Home.module.css";
-import { depositMoney, getMessage3 } from "./caculate";
-import { useWallet } from "@solana/wallet-adapter-react";
-import * as anchorcoral from "@coral-xyz/anchor";
-const anchor = require("@project-serum/anchor");
+import { createMessage, getMessage, updateMessage } from "./create_update";
 
 export default function Home() {
-  const { publicKey } = useWallet();
-  const [message, setMessage] = useState<Number>(0);
+  // const [messageAccount, _] = useState<any>(Keypair.generate()); // use to create a account for storage but not a PDA address
+  const messageAccount = Keypair.fromSecretKey(
+    Uint8Array.from([
+      130, 170, 16, 244, 39, 96, 154, 169, 130, 73, 210, 107, 144, 79, 207, 136,
+      156, 80, 226, 164, 137, 164, 177, 103, 209, 115, 159, 13, 40, 213, 26, 49,
+      108, 55, 9, 231, 108, 100, 30, 255, 34, 86, 28, 161, 169, 62, 165, 201,
+      153, 67, 75, 29, 2, 114, 204, 53, 247, 156, 71, 249, 44, 19, 76, 133,
+    ])
+  ); //Private key of any Random user in Array defined statically to storage data .
+
+  const [message, setMessage] = useState("");
+  const [messageAuthor, setMessageAuthor] = useState<string>("");
+  const [messageTime, setMessageTime] = useState<number>(0);
+  const [inputtedMessage, setInputtedMessage] = useState<string>("");
 
   const wallet: any = useAnchorWallet();
   const mounted = useIsMounted();
 
-  const balanceCheck = async () => {
-    const publickey = new PublicKey(wallet.publicKey.toString());
-    const seed = publickey.toBuffer();
-    console.log("seddder", seed);
-    const programId = new anchorcoral.web3.PublicKey(
-      "G4RtD4FYYPCrKks8cRGN3NnZzdKGNSe8YfvR3GnTWmVz"
-    );
-    const [REVIEW_PDA] = anchorcoral.web3.PublicKey.findProgramAddressSync(
-      [publickey.toBytes()],
-      programId
-    );
-    console.log("first2112", REVIEW_PDA.toString());
-    const buffer = Buffer.from(new anchor.BN(5).toArray()); // this value need to be increment every time to create a new PDA to store data (need to be handled by contract side)
-    const publicKeyBytes = publicKey ? publicKey.toBytes() : new Uint8Array();
-    const [REVIEW_PDA1] = anchorcoral.web3.PublicKey.findProgramAddressSync(
-      [publicKeyBytes, buffer],
-      programId
-    );
-    console.log("first2112", REVIEW_PDA1.toString());
-    return { REVIEW_PDA, REVIEW_PDA1 };
-  };
   const callGetMessage = async () => {
-    
-    const hello = await balanceCheck();
-
-    const result: any = await getMessage3(
-      wallet,
-      "EAdXan1jJdNHorKE1mXJ9ux4rZuxYhHLQaauvi4XtyDn" //this REVIEW_PDA address which should be set dynamically to check argument value .
-    );
+    const result: any = await getMessage(wallet, messageAccount);
     if (result) {
-      setMessage(result?.result);
+      setMessage(result.content.toString());
+      setMessageAuthor(result.author.toString());
+      setMessageTime(result.timestamp.toNumber() * 1000);
+      setInputtedMessage("");
     }
-    console.log("wewqeqweq", result.amount.toString());
   };
 
-  const depositCall = async () => {
-    const hello = await balanceCheck();
-    if (wallet) {
-      const result = await depositMoney(hello.REVIEW_PDA, hello.REVIEW_PDA1, wallet);// contract desposit function with argument
-      console.log("result1234", result);
-      if (result) {
-        callGetMessage(); // Call getMessage function to update the result
-      }
-    }
+  const callCreateMessage = async () => {
+    const result = await createMessage(inputtedMessage, wallet, messageAccount);
+    if (result) callGetMessage();
+  };
+
+  const callUpdateMessage = async () => {
+    const result = await updateMessage(inputtedMessage, wallet, messageAccount);
+    if (result) callGetMessage();
   };
 
   useEffect(() => {
@@ -73,18 +56,30 @@ export default function Home() {
       <div className={styles.main}>
         {wallet && (
           <div className={styles.message_bar}>
+            <input
+              className={styles.message_input}
+              placeholder="Message"
+              onChange={(e) => setInputtedMessage(e.target.value)}
+              value={inputtedMessage}
+            />
             <button
               className={styles.message_button}
-              onClick={() => depositCall()}
+              disabled={!inputtedMessage}
+              onClick={() => callUpdateMessage()}
             >
-              Calculate
+              Create Message
             </button>
           </div>
         )}
 
         {wallet && message && (
           <div>
-            <h2>Calculator Result: {Number(message)}</h2>
+            <h2>Current Message: {message}</h2>
+            <h2>
+              Message Author: {messageAuthor.substring(0, 4)}...
+              {messageAuthor.slice(-4)}
+            </h2>
+            <h2>Time: {new Date(messageTime).toLocaleDateString()}</h2>
           </div>
         )}
       </div>

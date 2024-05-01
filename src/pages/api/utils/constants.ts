@@ -1,4 +1,4 @@
-import idl from "../idl/claim_deposit.json";
+import idl from "../idl/create_update_message.json";
 
 import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
 
