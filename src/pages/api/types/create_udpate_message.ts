@@ -1,58 +1,24 @@
 export type TesterWorld = {
   version: "0.1.0";
-  name: "solana_hello_world";
+  name: "sriharsh_tester";
   instructions: [
     {
-      name: "createMessage";
+      name: "createMessanger";
       accounts: [
-        {
-          name: "message";
-          isMut: true;
-          isSigner: true;
-        },
-        {
-          name: "author";
-          isMut: true;
-          isSigner: true;
-        },
-        {
-          name: "systemProgram";
-          isMut: false;
-          isSigner: false;
-        }
+        { name: "message"; isMut: true; isSigner: true },
+        { name: "author"; isMut: true; isSigner: true },
+        { name: "systemProgram"; isMut: false; isSigner: false }
       ];
-      args: [
-        {
-          name: "content";
-          type: "string";
-        }
-      ];
+      args: [{ name: "content"; type: "string" }];
     },
     {
-      name: "updateMessage";
+      name: "updateMessanger";
       accounts: [
-        {
-          name: "message";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "author";
-          isMut: true;
-          isSigner: true;
-        },
-        {
-          name: "systemProgram";
-          isMut: false;
-          isSigner: false;
-        }
+        { name: "message"; isMut: true; isSigner: false },
+        { name: "author"; isMut: true; isSigner: true },
+        { name: "systemProgram"; isMut: false; isSigner: false }
       ];
-      args: [
-        {
-          name: "content";
-          type: "string";
-        }
-      ];
+      args: [{ name: "content"; type: "string" }];
     }
   ];
   accounts: [
@@ -61,18 +27,9 @@ export type TesterWorld = {
       type: {
         kind: "struct";
         fields: [
-          {
-            name: "author";
-            type: "publicKey";
-          },
-          {
-            name: "timestamp";
-            type: "i64";
-          },
-          {
-            name: "content";
-            type: "string";
-          }
+          { name: "author"; type: "publicKey" },
+          { name: "timestamp"; type: "i64" },
+          { name: "content"; type: "string" }
         ];
       };
     }
@@ -86,59 +43,25 @@ export type TesterWorld = {
 
 export const IDL: TesterWorld = {
   version: "0.1.0",
-  name: "solana_hello_world",
+  name: "sriharsh_tester",
   instructions: [
     {
-      name: "createMessage",
+      name: "createMessanger",
       accounts: [
-        {
-          name: "message",
-          isMut: true,
-          isSigner: true,
-        },
-        {
-          name: "author",
-          isMut: true,
-          isSigner: true,
-        },
-        {
-          name: "systemProgram",
-          isMut: false,
-          isSigner: false,
-        },
+        { name: "message", isMut: true, isSigner: true },
+        { name: "author", isMut: true, isSigner: true },
+        { name: "systemProgram", isMut: false, isSigner: false },
       ],
-      args: [
-        {
-          name: "content",
-          type: "string",
-        },
-      ],
+      args: [{ name: "content", type: "string" }],
     },
     {
-      name: "updateMessage",
+      name: "updateMessanger",
       accounts: [
-        {
-          name: "message",
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: "author",
-          isMut: true,
-          isSigner: true,
-        },
-        {
-          name: "systemProgram",
-          isMut: false,
-          isSigner: false,
-        },
+        { name: "message", isMut: true, isSigner: false },
+        { name: "author", isMut: true, isSigner: true },
+        { name: "systemProgram", isMut: false, isSigner: false },
       ],
-      args: [
-        {
-          name: "content",
-          type: "string",
-        },
-      ],
+      args: [{ name: "content", type: "string" }],
     },
   ],
   accounts: [
@@ -147,18 +70,9 @@ export const IDL: TesterWorld = {
       type: {
         kind: "struct",
         fields: [
-          {
-            name: "author",
-            type: "publicKey",
-          },
-          {
-            name: "timestamp",
-            type: "i64",
-          },
-          {
-            name: "content",
-            type: "string",
-          },
+          { name: "author", type: "publicKey" },
+          { name: "timestamp", type: "i64" },
+          { name: "content", type: "string" },
         ],
       },
     },

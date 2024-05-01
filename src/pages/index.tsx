@@ -7,20 +7,21 @@ import styles from "../styles/Home.module.css";
 import { createMessage, getMessage, updateMessage } from "./create_update";
 
 export default function Home() {
-  // const [messageAccount, _] = useState<any>(Keypair.generate()); // use to create a account for storage but not a PDA address
+  // const [messageAccount, _] = useState<any>(Keypair.generate()); // create a new account for storage
   const messageAccount = Keypair.fromSecretKey(
     Uint8Array.from([
-      130, 170, 16, 244, 39, 96, 154, 169, 130, 73, 210, 107, 144, 79, 207, 136,
-      156, 80, 226, 164, 137, 164, 177, 103, 209, 115, 159, 13, 40, 213, 26, 49,
-      108, 55, 9, 231, 108, 100, 30, 255, 34, 86, 28, 161, 169, 62, 165, 201,
-      153, 67, 75, 29, 2, 114, 204, 53, 247, 156, 71, 249, 44, 19, 76, 133,
-    ])
-  ); //Private key of any Random user in Array defined statically to storage data .
+      58, 11, 78, 19, 76, 113, 195, 13, 27, 58, 92, 87, 159, 140, 69, 236, 96,
+      244, 132, 52, 185, 22, 144, 157, 252, 198, 47, 58, 88, 252, 19, 88, 211,
+      225, 135, 127, 105, 66, 130, 19, 100, 40, 40, 66, 125, 249, 101, 160, 239,
+      53, 42, 75, 174, 91, 42, 188, 209, 189, 101, 60, 248, 148, 209, 187,
+    ]) // previously user Account is already assigned to program . So have to assign new Account to store data
+  );
+  console.log("storageAccount", messageAccount);
 
   const [message, setMessage] = useState("");
-  const [messageAuthor, setMessageAuthor] = useState<string>("");
-  const [messageTime, setMessageTime] = useState<number>(0);
-  const [inputtedMessage, setInputtedMessage] = useState<string>("");
+  const [messageAuthor, setMessageAuthor] = useState("");
+  const [messageTime, setMessageTime] = useState(0);
+  const [inputtedMessage, setInputtedMessage] = useState("");
 
   const wallet: any = useAnchorWallet();
   const mounted = useIsMounted();
@@ -36,11 +37,13 @@ export default function Home() {
   };
 
   const callCreateMessage = async () => {
+    // Every time user create a message it has to be assign with new storage Account as per contract
     const result = await createMessage(inputtedMessage, wallet, messageAccount);
     if (result) callGetMessage();
   };
 
   const callUpdateMessage = async () => {
+    // Use this function to update previous message on chain
     const result = await updateMessage(inputtedMessage, wallet, messageAccount);
     if (result) callGetMessage();
   };
@@ -65,9 +68,16 @@ export default function Home() {
             <button
               className={styles.message_button}
               disabled={!inputtedMessage}
-              onClick={() => callUpdateMessage()}
+              onClick={() => callCreateMessage()}
             >
               Create Message
+            </button>
+            <button
+              className={styles.message_button}
+              disabled={!inputtedMessage}
+              onClick={() => callUpdateMessage()}
+            >
+              Update Message
             </button>
           </div>
         )}
