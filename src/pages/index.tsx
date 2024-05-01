@@ -1,0 +1,90 @@
+import { useEffect, useState } from "react";
+import { Keypair, PublicKey } from "@solana/web3.js";
+import { useAnchorWallet } from "@solana/wallet-adapter-react";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import useIsMounted from "./api/utils/useIsMounted";
+import styles from "../styles/Home.module.css";
+import { depositMoney, getMessage3 } from "./caculate";
+import { useWallet } from "@solana/wallet-adapter-react";
+import * as anchorcoral from "@coral-xyz/anchor";
+const anchor = require("@project-serum/anchor");
+
+export default function Home() {
+  const { publicKey } = useWallet();
+  const [message, setMessage] = useState<Number>(0);
+
+  const wallet: any = useAnchorWallet();
+  const mounted = useIsMounted();
+
+  const balanceCheck = async () => {
+    const publickey = new PublicKey(wallet.publicKey.toString());
+    const seed = publickey.toBuffer();
+    console.log("seddder", seed);
+    const programId = new anchorcoral.web3.PublicKey(
+      "G4RtD4FYYPCrKks8cRGN3NnZzdKGNSe8YfvR3GnTWmVz"
+    );
+    const [REVIEW_PDA] = anchorcoral.web3.PublicKey.findProgramAddressSync(
+      [publickey.toBytes()],
+      programId
+    );
+    console.log("first2112", REVIEW_PDA.toString());
+    const buffer = Buffer.from(new anchor.BN(2).toArray());
+    const publicKeyBytes = publicKey ? publicKey.toBytes() : new Uint8Array();
+    const [REVIEW_PDA1] = anchorcoral.web3.PublicKey.findProgramAddressSync(
+      [publicKeyBytes, buffer],
+      programId
+    );
+    console.log("first2112", REVIEW_PDA1.toString());
+    return { REVIEW_PDA, REVIEW_PDA1 };
+  };
+  const callGetMessage = async () => {
+    const result: any = await getMessage3(
+      wallet,
+      "EAdXan1jJdNHorKE1mXJ9ux4rZuxYhHLQaauvi4XtyDn"
+    );
+    if (result) {
+      setMessage(result?.result);
+    }
+    console.log("wewqeqweq", result.amount.toString());
+  };
+
+  const depositCall = async () => {
+    const hello = await balanceCheck()
+    if (wallet) {
+      const result = await depositMoney(hello.REVIEW_PDA, hello.REVIEW_PDA1, wallet);
+      console.log("result1234", result);
+      if (result) {
+        callGetMessage(); // Call getMessage function to update the result
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (wallet) callGetMessage();
+  }, [wallet]);
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.navbar}>{mounted && <WalletMultiButton />}</div>
+
+      <div className={styles.main}>
+        {wallet && (
+          <div className={styles.message_bar}>
+            <button
+              className={styles.message_button}
+              onClick={() => depositCall()}
+            >
+              Calculate
+            </button>
+          </div>
+        )}
+
+        {wallet && message && (
+          <div>
+            <h2>Calculator Result: {Number(message)}</h2>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
