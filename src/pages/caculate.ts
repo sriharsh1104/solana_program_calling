@@ -37,7 +37,7 @@ export async function getMessage3(
   }
 }
 
-export async function depositMoney(acc: any, REVIEW_PDA1: any, wallet: any) {
+export async function depositMoney(REVIEW_PDA: any, REVIEW_PDA1: any, wallet: any) {
   const provider = new AnchorProvider(connection, wallet, {
     preflightCommitment: commitmentLevel,
   });
@@ -50,14 +50,14 @@ export async function depositMoney(acc: any, REVIEW_PDA1: any, wallet: any) {
     provider
   ) as Program<CrudWorld>;
   try {
-    console.log("first123", acc.toString());
+    console.log("first123", REVIEW_PDA.toString());
     const value = new anchor.BN(10);
     const timeStamp = new anchor.BN(Date.now() / 1000);
-    console.log("dasdkjasidjaslkndas", REVIEW_PDA1.toString(), acc.toString());
+    console.log("dasdkjasidjaslkndas", REVIEW_PDA1.toString(), REVIEW_PDA.toString());
     const txn = await program.methods
       .deposit("mvyMgM5K6hKabKncXejzY5qE3QdWcjFnRy5bQWTEy7k", value, timeStamp) // To => Address ,Amount , timeStamp
       .accounts({
-        txinfo: acc,
+        txinfo: REVIEW_PDA,
         reciept: REVIEW_PDA1,
         signer: wallet.publicKey,
         systemProgram: web3.SystemProgram.programId,

@@ -28,7 +28,7 @@ export default function Home() {
       programId
     );
     console.log("first2112", REVIEW_PDA.toString());
-    const buffer = Buffer.from(new anchor.BN(2).toArray());
+    const buffer = Buffer.from(new anchor.BN(5).toArray()); // this value need to be increment every time to create a new PDA to store data (need to be handled by contract side)
     const publicKeyBytes = publicKey ? publicKey.toBytes() : new Uint8Array();
     const [REVIEW_PDA1] = anchorcoral.web3.PublicKey.findProgramAddressSync(
       [publicKeyBytes, buffer],
@@ -38,9 +38,12 @@ export default function Home() {
     return { REVIEW_PDA, REVIEW_PDA1 };
   };
   const callGetMessage = async () => {
+    
+    const hello = await balanceCheck();
+
     const result: any = await getMessage3(
       wallet,
-      "EAdXan1jJdNHorKE1mXJ9ux4rZuxYhHLQaauvi4XtyDn"
+      "EAdXan1jJdNHorKE1mXJ9ux4rZuxYhHLQaauvi4XtyDn" //this REVIEW_PDA address which should be set dynamically to check argument value .
     );
     if (result) {
       setMessage(result?.result);
@@ -49,9 +52,9 @@ export default function Home() {
   };
 
   const depositCall = async () => {
-    const hello = await balanceCheck()
+    const hello = await balanceCheck();
     if (wallet) {
-      const result = await depositMoney(hello.REVIEW_PDA, hello.REVIEW_PDA1, wallet);
+      const result = await depositMoney(hello.REVIEW_PDA, hello.REVIEW_PDA1, wallet);// contract desposit function with argument
       console.log("result1234", result);
       if (result) {
         callGetMessage(); // Call getMessage function to update the result
