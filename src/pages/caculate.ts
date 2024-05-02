@@ -7,8 +7,7 @@ import {
   TEST_PROGRAM_INTERFACE,
 } from "./api/utils/constants";
 import { AnchorWallet } from "@solana/wallet-adapter-react";
-import { Keypair, PublicKey } from "@solana/web3.js";
-import * as bs58 from "bs58";
+import { PublicKey } from "@solana/web3.js";
 
 export async function getMessage3(
   wallet: AnchorWallet, // User Wallet PublicKey

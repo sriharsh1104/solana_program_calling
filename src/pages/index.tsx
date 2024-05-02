@@ -95,7 +95,6 @@ export default function Home() {
             </button>
             <button
               className={styles.message_button}
-              disabled={!selectedOperation || !inputValue1 || !inputValue2}
               onClick={() => callCreateAccount()}
             >
               Create Account
