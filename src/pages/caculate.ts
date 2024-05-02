@@ -37,7 +37,7 @@ export async function getMessage3(
   }
 }
 
-export async function createAccount(acc: any, wallet: any, publicKey: any) {
+export async function createAccount(acc: any, wallet: any) {
   const provider = new AnchorProvider(connection, wallet, {
     preflightCommitment: commitmentLevel,
   });
@@ -88,8 +88,8 @@ export async function crudOperation(
       Multiplication: { multiplication: {} },
       Division: { division: {} },
     };
-    // Optional 
-    // If signer is set than have to use private or secret key of the user => Bad practise not possiable just for testing purpose 
+    // Optional
+    // If signer is set than have to use private or secret key of the user => Bad practise not possiable just for testing purpose
     // If signer is not set we can use user Public address to pay the fee .
 
     // const privateKeyString =
@@ -97,17 +97,17 @@ export async function crudOperation(
     // const privateKeyBuffer = bs58.decode(privateKeyString);
 
     // const messageAccountFromPrivateKey =
-    //   Keypair.fromSecretKey(privateKeyBuffer);  
-console.log('first', wallet)
+    //   Keypair.fromSecretKey(privateKeyBuffer);
+    console.log("wallet", wallet);
     const operation = Operations[selectedOperation];
-    console.log("operation", operation,wallet.publicKey.toString());
+    console.log("operation", operation, wallet.publicKey.toString());
     const txn = await program.methods
       .calculate(operation, inputValue1, inputValue2)
       .accounts({
         account: acc.publicKey,
         payer: wallet.publicKey,
       })
-      // .signers([messageAccountFromPrivateKey]) //no Need to set signer can use publicKey to pay 
+      // .signers([messageAccountFromPrivateKey]) //no Need to set signer can use publicKey to pay
       .rpc();
 
     console.log("Transaction", txn);

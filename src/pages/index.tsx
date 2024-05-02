@@ -5,7 +5,6 @@ import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import useIsMounted from "./api/utils/useIsMounted";
 import styles from "../styles/Home.module.css";
 import { createAccount, crudOperation, getMessage3 } from "./caculate";
-import { useWallet } from "@solana/wallet-adapter-react";
 export default function Home() {
   // const [messageAccount, _] = useState<any>(Keypair.generate()); // Use for generating new account for storage 
   const messageAccount = Keypair.fromSecretKey(                     // contract is deployed with new account change storage
@@ -17,7 +16,6 @@ export default function Home() {
     ]) // Array of Private key Address Which Will Store Data
   );
   console.log('messageAccount', messageAccount.publicKey.toString())
-  const { publicKey } = useWallet();
   const [message, setMessage] = useState<Number>(0);
   const [selectedOperation, setSelectedOperation] = useState<string>("");
   const [inputValue1, setInputValue1] = useState<string>("");
@@ -26,17 +24,18 @@ export default function Home() {
   const wallet: any = useAnchorWallet();
   const mounted = useIsMounted();
 
-  const callGetMessage = async () => {
+  const callGetMessage = async () => { // this is read function of contract which which will show result
     const result: any = await getMessage3(wallet, messageAccount);
     if (result) {
       setMessage(result?.result);
     }
-    console.log("wewqeqweq", result?.result);
+    console.log("result", result?.result);
   };
 
-  const callCreateAccount = async () => {
+  const callCreateAccount = async () => { // this is used to create a new account if contract is deployed with new Addesss
     if (wallet) {
-      const result = await createAccount(messageAccount, wallet, publicKey);
+      const result = await createAccount(messageAccount, wallet);
+      console.log('result', result)
     }
   };
   const callCalculate = async () => {
@@ -93,6 +92,13 @@ export default function Home() {
               onClick={() => callCalculate()}
             >
               Calculate
+            </button>
+            <button
+              className={styles.message_button}
+              disabled={!selectedOperation || !inputValue1 || !inputValue2}
+              onClick={() => callCreateAccount()}
+            >
+              Create Account
             </button>
           </div>
         )}
