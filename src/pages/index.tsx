@@ -16,7 +16,7 @@ export default function Home() {
       53, 42, 75, 174, 91, 42, 188, 209, 189, 101, 60, 248, 148, 209, 187,
     ]) // previously user Account is already assigned to program . So have to assign new Account to store data
   );
-  console.log("storageAccount", messageAccount);
+  console.log("storageAccount", messageAccount.toString());
 
   const [message, setMessage] = useState("");
   const [messageAuthor, setMessageAuthor] = useState("");
