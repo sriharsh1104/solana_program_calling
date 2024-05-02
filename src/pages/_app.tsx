@@ -6,11 +6,9 @@ import { WalletModalProvider
  } from "@solana/wallet-adapter-react-ui";
 import { endpoint } from "./api/utils/constants";
 import "@solana/wallet-adapter-react-ui/styles.css";
-import { krkxkalal } from "../../krk";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const phantomWallet = new PhantomWalletAdapter();
-  // krkxkalal();
   return (
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={[phantomWallet]}>

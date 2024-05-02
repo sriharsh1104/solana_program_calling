@@ -4,7 +4,7 @@ import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import useIsMounted from "./api/utils/useIsMounted";
 import styles from "../styles/Home.module.css";
-import { depositMoney, getMessage3 } from "./caculate";
+import { claimMoney, depositMoney, getMessage3 } from "./caculate";
 import { useWallet } from "@solana/wallet-adapter-react";
 import * as anchorcoral from "@coral-xyz/anchor";
 const anchor = require("@project-serum/anchor");
@@ -28,7 +28,7 @@ export default function Home() {
       programId
     );
     console.log("first2112", REVIEW_PDA.toString());
-    const buffer = Buffer.from(new anchor.BN(5).toArray()); // this value need to be increment every time to create a new PDA to store data (need to be handled by contract side)
+    const buffer = Buffer.from(new anchor.BN(6).toArray()); // this value need to be increment every time to create a new PDA to store data (need to be handled by contract side)
     const publicKeyBytes = publicKey ? publicKey.toBytes() : new Uint8Array();
     const [REVIEW_PDA1] = anchorcoral.web3.PublicKey.findProgramAddressSync(
       [publicKeyBytes, buffer],
@@ -38,7 +38,6 @@ export default function Home() {
     return { REVIEW_PDA, REVIEW_PDA1 };
   };
   const callGetMessage = async () => {
-    
     const hello = await balanceCheck();
 
     const result: any = await getMessage3(
@@ -54,7 +53,25 @@ export default function Home() {
   const depositCall = async () => {
     const hello = await balanceCheck();
     if (wallet) {
-      const result = await depositMoney(hello.REVIEW_PDA, hello.REVIEW_PDA1, wallet);// contract desposit function with argument
+      const result = await depositMoney(
+        hello.REVIEW_PDA,
+        hello.REVIEW_PDA1,
+        wallet
+      ); // contract desposit function with argument
+      console.log("result1234", result);
+      if (result) {
+        callGetMessage(); // Call getMessage function to update the result
+      }
+    }
+  };
+  const claimCall = async () => {
+    // const hello = await balanceCheck();
+    if (wallet) {
+      const result = await claimMoney(
+        // hello.REVIEW_PDA,
+        // hello.REVIEW_PDA1,
+        wallet
+      ); // contract desposit function with argument
       console.log("result1234", result);
       if (result) {
         callGetMessage(); // Call getMessage function to update the result
@@ -78,6 +95,12 @@ export default function Home() {
               onClick={() => depositCall()}
             >
               Calculate
+            </button>
+            <button
+              className={styles.message_button}
+              onClick={() => claimCall()}
+            >
+              Claim
             </button>
           </div>
         )}
