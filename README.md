@@ -18,7 +18,7 @@ I'm an enthusiastic software engineer with knowledge of the Ethereum blockchain,
 Clone the project
 
 ```bash
-  git clone https://link-to-project
+  git clone https://github.com/sriharsh1104/solana_program_calling.git
 ```
 
 Go to the project directory
