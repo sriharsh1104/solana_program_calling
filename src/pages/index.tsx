@@ -7,8 +7,8 @@ import styles from "../styles/Home.module.css";
 import { createAccount, crudOperation, getMessage3 } from "./caculate";
 import { useWallet } from "@solana/wallet-adapter-react";
 export default function Home() {
-  // const [messageAccount, _] = useState<any>(Keypair.generate()); // Use for generating new account for storage
-  const messageAccount = Keypair.fromSecretKey(
+  // const [messageAccount, _] = useState<any>(Keypair.generate()); // Use for generating new account for storage 
+  const messageAccount = Keypair.fromSecretKey(                     // contract is deployed with new account change storage
     Uint8Array.from([
       9, 227, 222, 228, 87, 164, 212, 17, 211, 86, 170, 117, 242, 145, 156, 115,
       0, 199, 179, 176, 238, 181, 178, 6, 245, 92, 209, 173, 70, 138, 91, 247,
