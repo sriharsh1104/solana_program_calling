@@ -9,7 +9,7 @@ This project is a web application designed to interact with Solana smart contrac
 
 
 ## 🚀 About Me
-I'm an enthusiastic software engineer with knowledge of the Ethereum blockchain, Solana, JavaScript, React, and algorithm.
+I'm an enthusiastic software engineer with knowledge of the Ethereum blockchain, Solana blockchain, JavaScript, React, and algorithm.
 
 
 
