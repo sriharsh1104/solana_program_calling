@@ -59,7 +59,7 @@ export async function depositMoney(
     const value = new anchor.BN(10);
     const timeStamp = new anchor.BN(Date.now() / 1000);
     const txn = await program.methods
-      .deposit("mvyMgM5K6hKabKncXejzY5qE3QdWcjFnRy5bQWTEy7k", value, timeStamp) // To => Address ,Amount , timeStamp
+      .deposit("2znwVF1iJbgzwggEzE6waKrfxdymefEE3oDUKa54meoM", value, timeStamp) // To => Address ,Amount , timeStamp
       .accounts({
         txinfo: REVIEW_PDA,
         reciept: REVIEW_PDA1,
@@ -106,7 +106,7 @@ export async function claimMoney(
       "2znwVF1iJbgzwggEzE6waKrfxdymefEE3oDUKa54meoM"
     );
     console.log("publicKeytoAta", publicKeytoAta);
-    const programId = new anchorcoral.web3.PublicKey(
+    const programId = new anchor.web3.PublicKey(
       "G4RtD4FYYPCrKks8cRGN3NnZzdKGNSe8YfvR3GnTWmVz"
     );
     console.log("programId", publicKeyfromAta,publicKeytoAta,programId);
@@ -121,7 +121,7 @@ export async function claimMoney(
 
     console.log("REVIEW_PDA", REVIEW_PDA2.toString(), REVIEW_PDA3.toString());
     const txn = await program.methods
-      .claim(value) // To => Address ,Amount , timeStamp
+      .claim(value) // To => Amount 
       .accounts({
         from: "mvyMgM5K6hKabKncXejzY5qE3QdWcjFnRy5bQWTEy7k",
         to: "2znwVF1iJbgzwggEzE6waKrfxdymefEE3oDUKa54meoM",

@@ -16,21 +16,21 @@ export default function Home() {
   const wallet: any = useAnchorWallet();
   const mounted = useIsMounted();
 
-  const balanceCheck = async () => {
+  const PDA_Deposit_claim = async () => {
     const publickey = new PublicKey(wallet.publicKey.toString());
     const seed = publickey.toBuffer();
     console.log("seddder", seed);
-    const programId = new anchorcoral.web3.PublicKey(
+    const programId = new anchor.web3.PublicKey(
       "G4RtD4FYYPCrKks8cRGN3NnZzdKGNSe8YfvR3GnTWmVz"
     );
-    const [REVIEW_PDA] = anchorcoral.web3.PublicKey.findProgramAddressSync(
+    const [REVIEW_PDA] = anchor.web3.PublicKey.findProgramAddressSync(
       [publickey.toBytes()],
       programId
     );
     console.log("Review PDA Address", REVIEW_PDA.toString());
-    const buffer = Buffer.from(new anchor.BN(6).toArray()); // this value need to be increment every time to create a new PDA to store data (need to be handled by contract side)
+    const buffer = Buffer.from(new anchor.BN(8).toArray()); // this value need to be increment every time to create a new PDA to store data (need to be handled by contract side)
     const publicKeyBytes = publicKey ? publicKey.toBytes() : new Uint8Array();
-    const [REVIEW_PDA1] = anchorcoral.web3.PublicKey.findProgramAddressSync(
+    const [REVIEW_PDA1] = anchor.web3.PublicKey.findProgramAddressSync(
       [publicKeyBytes, buffer],
       programId
     );
@@ -38,7 +38,7 @@ export default function Home() {
     return { REVIEW_PDA, REVIEW_PDA1 };
   };
   const callGetMessage = async () => {
-    const hello = await balanceCheck();
+    const pdaCalling = await PDA_Deposit_claim();
 
     const result: any = await getMessage3(
       wallet,
@@ -51,11 +51,11 @@ export default function Home() {
   };
 
   const depositCall = async () => {
-    const hello = await balanceCheck();
+    const pdaCalling = await PDA_Deposit_claim();
     if (wallet) {
       const result = await depositMoney(
-        hello.REVIEW_PDA,
-        hello.REVIEW_PDA1,
+        pdaCalling.REVIEW_PDA,
+        pdaCalling.REVIEW_PDA1,
         wallet
       ); // contract desposit function with argument
       console.log("Result for Deposit=>", result);
