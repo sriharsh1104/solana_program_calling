@@ -7,7 +7,7 @@ import {
   TEST_PROGRAM_INTERFACE,
 } from "./api/utils/constants";
 import { AnchorWallet, useWallet } from "@solana/wallet-adapter-react";
-import { Keypair, PublicKey } from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js";
 const anchor = require("@project-serum/anchor");
 import * as anchorcoral from "@coral-xyz/anchor";
 
@@ -55,14 +55,9 @@ export async function depositMoney(
     provider
   ) as Program<CrudWorld>;
   try {
-    console.log("first123", REVIEW_PDA.toString());
+    console.log("REVIEW_PDA ", REVIEW_PDA.toString());
     const value = new anchor.BN(10);
     const timeStamp = new anchor.BN(Date.now() / 1000);
-    console.log(
-      "dasdkjasidjaslkndas",
-      REVIEW_PDA1.toString(),
-      REVIEW_PDA.toString()
-    );
     const txn = await program.methods
       .deposit("mvyMgM5K6hKabKncXejzY5qE3QdWcjFnRy5bQWTEy7k", value, timeStamp) // To => Address ,Amount , timeStamp
       .accounts({
@@ -98,7 +93,6 @@ export async function claimMoney(
     provider
   ) as Program<CrudWorld>;
   try {
-    // console.log("first123", REVIEW_PDA.toString());
     const value = new anchor.BN(10);
     // const timeStamp = new anchor.BN(Date.now() / 1000);
     // console.log("dasdkjasidjaslkndas", REVIEW_PDA1.toString(), REVIEW_PDA.toString());
@@ -115,19 +109,17 @@ export async function claimMoney(
     const programId = new anchorcoral.web3.PublicKey(
       "G4RtD4FYYPCrKks8cRGN3NnZzdKGNSe8YfvR3GnTWmVz"
     );
-    console.log("programId", programId);
+    console.log("programId", publicKeyfromAta,publicKeytoAta,programId);
     const [REVIEW_PDA2] = anchor.web3.PublicKey.findProgramAddressSync(
       [publicKeyfromAta.toBytes()],
       programId
     );
-    console.log("REVIEW_PDA2", REVIEW_PDA2);
     const [REVIEW_PDA3] = anchor.web3.PublicKey.findProgramAddressSync(
       [publicKeytoAta.toBytes()],
       programId
     );
-    console.log("REVIEW_PDA3", REVIEW_PDA3);
 
-    console.log("first2112", REVIEW_PDA2.toString(), REVIEW_PDA3.toString());
+    console.log("REVIEW_PDA", REVIEW_PDA2.toString(), REVIEW_PDA3.toString());
     const txn = await program.methods
       .claim(value) // To => Address ,Amount , timeStamp
       .accounts({
